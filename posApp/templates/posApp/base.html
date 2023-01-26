@@ -1,0 +1,273 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% if page_title %}
+    <title>{{ page_title }} | KWAGOO</title>
+    {% else %}
+    <title>KWAGOO POS</title>
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{% static 'assets/material-admin/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/material-admin/vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'assets/material-admin/vendors/flag-icon-css/css/flag-icon.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/material-admin/vendors/jvectormap/jquery-jvectormap.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{% static 'assets/material-admin/css/demo/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/select2/dist/css/select2.min.css' %}">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"> -->
+    <link rel="stylesheet" href="{% static 'assets/default/css/style.css' %}">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="{% static 'assets/material-admin/images/kwagoo.png' %}" type="image/x-icon" >
+    <script src="{% static 'assets/default/js/jquery-3.6.0.min.js' %}">
+    </script>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/bootstrap/js/popper.min.js' %}"></script>
+</head>
+
+<body>
+    <script src="{% static 'assets/material-admin/js/preloader.js' %}"></script>
+    <div class="body-wrapper">
+        <!-- Aside -->
+        <!-- partial:partials/_sidebar.html -->
+        <aside class="mdc-drawer mdc-drawer--dismissible mdc-drawer--open bg-dark bg-gradient">
+            <div class="mdc-drawer__header border-bottom border-light">
+                <a href="{% url 'home-page' %}" class="brand-logo">
+                    <img style="max-width: 100%; height: auto;" src="{% static 'assets/material-admin/images/kwagoo.png' %}" alt="LOGO"><h3 class="text-center text-light">KWAGOO</h3>
+                </a>
+            </div>
+            <div class="mdc-drawer__content">
+                <div class="mdc-list-group">
+                    <nav class="mdc-list mdc-drawer-menu">
+                        {% if request.user.is_superuser or request.user.is_staff %}
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="{% url 'home-page' %}">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">home</i> Home
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="{% url 'users-page' %}">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">group</i> Users
+                            </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="{% url 'category-page' %}">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">list</i> Category List
+                            </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="{% url 'product-page' %}">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">label</i> Product List
+                            </a>
+                        </div>
+                        {% endif %}
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="{% url 'pos-page' %}">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">payment</i> POS
+                            </a>
+                        </div>
+                        {% if request.user.is_staff or request.user.is_superuser %}
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="{% url 'transaction_code' %}">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">payment</i> Transaction using code
+                            </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="{% url 'sales-page' %}">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">receipt</i> Sales
+                            </a>
+                        </div>
+                        {% endif %}
+                    </nav>
+                </div>
+            </div>
+        </aside>
+        <!-- partial -->
+        <!-- Aside -->
+        <div class="main-wrapper mdc-drawer-app-content">
+            <!-- Top Navigation -->
+<!-- partial:partials/_navbar.html -->
+<header class="mdc-top-app-bar border-bottom shadow">
+    <div class="mdc-top-app-bar__row">
+        <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+            <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button sidebar-toggler">menu</button>
+        </div>
+        <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end mdc-top-app-bar__section-right">
+            <div class="menu-button-container menu-profile d-none d-md-block">
+                <button class="mdc-button mdc-menu-button">
+                    <span class="d-flex align-items-center">
+                    <span class="figure">
+                        <img src="{% static 'assets/material-admin/images/faces/ava.jpg' %}" alt="user" class="user">
+                    </span>
+                    <span class="user-name">{{ user.first_name }}</span>
+                    </span>
+                </button>
+                <div class="mdc-menu mdc-menu-surface" tabindex="-1">
+                    <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                        {% if request.user.is_superuser %}
+                        <li class="mdc-list-item" role="menuitem" id="adminBtn">
+                            <a class="text-dark">
+                                <div class="item-thumbnail item-thumbnail-icon-only">
+                                    <i class="mdi mdi-settings-outline text-dark"></i>
+                                </div>
+                                <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                                    <h6 class="item-subject font-weight-normal">
+                                        Admin
+                                    </h6>
+                                </div>
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li class="mdc-list-item" role="menuitem" id="logoutBtn">
+                            <a class="text-dark">
+                                <div class="item-thumbnail item-thumbnail-icon-only">
+                                    <i class="mdi mdi-logout text-dark"></i>
+                                </div>
+                                <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                                    <h6 class="item-subject font-weight-normal">Logout</h6>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- partial -->
+            <!-- Top Navigation -->
+
+            <div class="page-wrapper mdc-toolbar-fixed-adjust">
+                <main class="content-wrapper">
+                    <!-- Message -->
+                    {% if messages %}
+                    <div class="mdc-layout-grid py-1">
+                        <div class="mdc-layout-grid__inner">
+                            {% for message in messages %}
+                            <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+                                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{message.tags}}{% endif %} w-100 rounded-0 mb-0">
+                                    <div class="d-flex w-100">
+                                        <div class="col-auto flex-shrink-1 flex-grow-1">{{ message }}</div>
+                                        <div class="col-auto text-center">
+                                            <button class="btn-close btn-sm text-sm" type="button" onclick="$(this).closest('.alert').remove()"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- Message -->
+                    <div class="mdc-layout-grid">
+                        <div class="mdc-layout-grid__inner">
+                            {% block pageContent %} {% endblock pageContent %}
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    {% block ScriptBlock %} {% endblock ScriptBlock %}
+    <div class="modal fade" id="uni_modal" role='dialog'>
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn  btn-sm btn-flat btn-primary rounded-0" id='submit' onclick="$('#uni_modal form').submit()">Save</button>
+                    <button type="button" class="btn btn-sm btn-flat btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="confirm_modal" role='dialog'>
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="delete_content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-flat btn-primary rounded-0" id='confirm' onclick="">Continue</button>
+                    <button type="button" class="btn btn-sm btn-flat btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $('#logoutBtn').click(()=>{window.location.href = "{% url 'logout' %}";});
+
+        $('#adminBtn').click(()=>window.location.href = "{% url 'redirect-admin' %}");
+
+        window.start_loader = function() {
+            $('body').removeClass('loaded')
+        }
+        window.end_loader = function() {
+            $('body').addClass('loaded')
+        }
+        window.uni_modal = function($title = '', $url = '', $size = "") {
+            start_loader()
+            $.ajax({
+                url: $url,
+                error: err => {
+                    console.log()
+                    alert("An error occured")
+                },
+                success: function(resp) {
+                    if (resp) {
+                        $('#uni_modal .modal-title').html($title)
+                        $('#uni_modal .modal-body').html(resp)
+                        if ($size != '') {
+                            $('#uni_modal .modal-dialog').addClass($size + '  modal-dialog-centered')
+                        } else {
+                            $('#uni_modal .modal-dialog').removeAttr("class").addClass("modal-dialog modal-md modal-dialog-centered")
+                        }
+                        $('#uni_modal').modal({
+                            backdrop: 'static',
+                            keyboard: false,
+                            focus: true
+                        })
+                        $('#uni_modal').modal('show')
+                        end_loader()
+                    }
+                }
+            })
+        }
+        window._conf = function($msg = '', $func = '', $params = []) {
+            $('#confirm_modal #confirm').attr('onclick', $func + "(" + $params.join(',') + ")")
+            $('#confirm_modal .modal-body').html($msg)
+            $('#confirm_modal').modal('show')
+        }
+        $(function() {
+
+        })
+    </script>
+
+    <script src="{% static 'assets/material-admin/vendors/js/vendor.bundle.base.js' %}"></script>
+    <script src="{% static 'assets/material-admin/js/material.js' %}"></script>
+    <script src="{% static 'assets/material-admin/js/misc.js' %}"></script>
+    <script src="{% static 'assets/material-admin/js/dashboard.js' %}"></script>
+    <script src="{% static 'assets/select2/dist/js/select2.full.js' %}"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+</body>
+
+</html>

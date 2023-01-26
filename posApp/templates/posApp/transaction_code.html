@@ -1,0 +1,57 @@
+{% extends "posApp/base.html" %} {% block pageContent %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Point of Sales</h4>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card">
+        <form action="" id="pos-form">
+            <fieldset>
+                <legend>Transaction using code</legend>
+                <div class="col-12 bg-gradient bg-dark bg-opacity-50 border h-100">
+                    <div class="col-12 py-4 px-2">
+                        <input type="text" name="code" placeholder="Code">
+                    </div>
+                </div>
+                
+            </fieldset>
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <button class="btn btn-primary btn-sm rounded-0" type="button" id="check_out"><i class="mdi mdi-save"></i> Checkout</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock pageContent %}
+{% block ScriptBlock %}
+<script>
+    $('#check_out').click(e=>{
+        if($('[name="code"]').val().length == 0){
+            alert('Code required')
+            return
+        }
+        $.ajax({
+            headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+            url:"{% url 'validation' %}",
+            type:'POST',
+            data:{code:$('[name="code').val()},
+        })
+        .done(e=>{
+            if(e.status == 'failed'){
+                alert('Code is expired')
+            }else{
+                uni_modal('Checkout', "{% url 'reciept_code' %}?code="+$('[name="code"]').val())
+            }
+            console.log(e)
+        })
+        // uni_modal('Checkout', "{% url 'reciept_code' %}?code="+$('[name="code"]').val())
+    })
+</script>
+{% endblock ScriptBlock %}

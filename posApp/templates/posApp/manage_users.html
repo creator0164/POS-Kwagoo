@@ -1,0 +1,86 @@
+<div class="container-fluid">
+    <form action="" id="user-form">
+        <input type="hidden" name="id" value="{% if user.pk %}{{user.pk}}{% endif %}">
+        <div class="form-group mb-3">
+            <label for="username" class="control-label">Username</label>
+            <input type="text" name="username" id="username" class="form-control form-control-sm rounded-0" value="{% if user.username %}{{user.username}}{% endif %}" required>
+        </div>
+        {% if no == 'yes' %}
+        <div class="form-group mb-3">
+            <label for="password" class="control-label">Password</label>
+            <input type="password" name="password" id="password" class="form-control form-control-sm rounded-0" value="{% if user.password %}{{user.password}}{% endif %}" required>
+        </div>
+        {% endif %}
+        <div class="form-group mb-3">
+            <label for="email" class="control-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control form-control-sm rounded-0" value="{% if user.email %}{{user.email}}{% endif %}" required>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="fname" class="control-label">First Name</label>
+            <input type="text" name="fname" id="fname" class="form-control form-control-sm rounded-0" value="{% if user.first_name %}{{user.first_name}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="lname" class="control-label">Last Name</label>
+            <input type="text" name="lname" id="lname" class="form-control form-control-sm rounded-0" value="{% if user.last_name%}{{user.last_name}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="category_id" class="control-label">Position</label>
+            <select name="category_id" id="category_id" class="form-select form-select-sm rounded-0" required>
+                <option {% if category == 'User' %}selected{% endif %} value="User">User</option>
+                <option {% if category == 'Emplooye' %}selected{% endif %} value="Employee">Employee</option>
+                <option {% if category == 'Admin' %}selected{% endif %} value="Admin">Admin</option>
+        </select>
+            
+    </form>
+    </div>
+    <script>
+        $(function() {
+            $('#user-form').submit(function(e) {
+                e.preventDefault();
+                var _this = $(this)
+                $('.err-msg').remove();
+                var el = $('<div>')
+                el.addClass("alert alert-danger err-msg")
+                el.hide()
+                if (_this[0].checkValidity() == false) {
+                    _this[0].reportValidity();
+                    return false;
+                }
+                start_loader();
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": '{{csrf_token}}'
+                    },
+                    url: "{% url 'save_user' %}",
+                    data: new FormData($(this)[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    method: 'POST',
+                    type: 'POST',
+                    dataType: 'json',
+                    error: err => {
+                        console.log(err)
+                        end_loader();
+                    },
+                    success: function(resp) {
+                        if (typeof resp == 'object' && resp.status == 'success') {
+                            el.removeClass("alert alert-danger err-msg")
+                            location.reload()
+                        } else if (resp.status == 'failed' && !!resp.msg) {
+                            el.text(resp.msg)
+                        } else {
+                            el.text("An error occured", 'error');
+                            end_loader();
+                            // console.err(resp)
+                        }
+                        _this.prepend(el)
+                        el.show('slow')
+                        $("html, body, .modal").scrollTop(0);
+                        end_loader()
+                    }
+                })
+            })
+        })
+    </script>
