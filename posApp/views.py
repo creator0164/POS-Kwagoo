@@ -260,7 +260,7 @@ def save_user(request):
     if id.isnumeric() and User.objects.exclude(id=id).filter(username__iexact=data['username']).exists():
         print('aaa')
         resp['msg'] = 'Username is already Exist.'
-    elif User.objects.filter(username__iexact=data['username']).exists():
+    elif User.objects.exclude(id=id).filter(username__iexact=data['username']).exists():
         resp['msg'] = 'Username is already Exist.'
     else:
         try:
@@ -302,6 +302,18 @@ def delete_product(request):
     resp = {'status': ''}
     try:
         Products.objects.filter(id=data['id']).delete()
+        resp['status'] = 'success'
+        messages.success(request, 'Product Successfully deleted.')
+    except:
+        resp['status'] = 'failed'
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
+@login_required
+def delete_user(request):
+    data = request.POST
+    resp = {'status': ''}
+    try:
+        User.objects.filter(id=data['id']).delete()
         resp['status'] = 'success'
         messages.success(request, 'Product Successfully deleted.')
     except:
@@ -457,7 +469,17 @@ def reciept_code(request):
     try:
 
         code = request.GET.get('code')
+        print('test')
+
+        if not Sales.objects.filter(code=code).exists():
+            # resp['status'] = 'blank'
+            context = {
+                'status': 'blank'
+            }
+            print('test1')
+            return render(request, 'posApp/receipt_code.html', context)
         sales = Sales.objects.filter(code=code).first()
+        
         transaction = {}
         for field in Sales._meta.get_fields():
             if field.related_model is None:
@@ -479,10 +501,16 @@ def validation(request):
     try:
         resp = {}
         code = request.POST.get('code')
-        sales = Sales.objects.get(code=json.loads(code))
-        if not sales.status:
-            resp['status'] = 'failed'
-            print(1)
+        print(code,'sassa')
+        print(Sales.objects.filter(code=json.loads(code)).exists())
+        if not Sales.objects.filter(code=json.loads(code)).exists():
+            resp['status'] = 'not'
+            print('test111')
+        else:
+            sales = Sales.objects.get(code=json.loads(code))
+            if not sales.status:
+                resp['status'] = 'failed'
+                print(1)
     except Exception as e:
         print(e)
     return HttpResponse(json.dumps(resp), content_type="application/json")
@@ -545,6 +573,8 @@ def register_validation(request):
         username = request.POST['username']
         password1 = request.POST['password1']
         password2 = request.POST['password2']
+
+
 
         user = User.objects.filter(username=username).exists()
         if user:

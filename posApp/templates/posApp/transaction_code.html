@@ -44,6 +44,11 @@
             data:{code:$('[name="code').val()},
         })
         .done(e=>{
+            console.log(e)
+            if (e.status == 'not'){
+                alert('Code is not exist.')
+                return
+            }
             if(e.status == 'failed'){
                 alert('Code is expired')
             }else{

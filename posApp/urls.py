@@ -23,6 +23,7 @@ urlpatterns = [
     path('save_product', views.save_product, name="save-product-page"),
     path('save_user', views.save_user, name='save_user'),
     path('delete_product', views.delete_product, name="delete-product"),
+    path('delete_user', views.delete_user, name='delete_user'),
     path('pos', views.pos, name="pos-page"),
     path('checkout-modal', views.checkout_modal, name="checkout-modal"),
     path('save-pos', views.save_pos, name="save-pos"),

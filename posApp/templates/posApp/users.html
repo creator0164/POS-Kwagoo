@@ -66,7 +66,7 @@
             uni_modal("Edit User", "{% url 'manage_users' %}?id=" + $(this).attr('data-id'))
         })
         $('.delete-data').click(function() {
-            _conf("Are you sure to delete this Product?", "delete_product", [$(this).attr('data-id')])
+            _conf("Are you sure to delete this User?", "delete_user", [$(this).attr('data-id')])
         })
 
         $('#uni_modal').on('shown.bs.modal', function() {
@@ -85,6 +85,34 @@
                 "X-CSRFToken": '{{csrf_token}}'
             },
             url: "{% url 'delete-product' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+
+    function delete_user($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'delete_user' %}",
             method: "POST",
             data: {
                 id: $id

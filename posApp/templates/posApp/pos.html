@@ -69,8 +69,8 @@
                                     <input type="hidden" name="sub_total" value="0">
                                     <span class="h3 fw-bold" id="sub_total">0.00</span>
                                 </dd>
-                                <dt {% if not request.user.is_staff or not request.user.is_superuser  %}hidden{% endif %} class="h4 fw-bold text-light">Tax Inclusive (%)</dt>
-                                <dd {% if not request.user.is_staff or not request.user.is_superuser  %}hidden{% endif %}>
+                                <dt {% if not request.user.is_staff or not request.user.is_superuser %}hidden{% endif %} class="h4 fw-bold text-light">Tax Inclusive (%)</dt>
+                                <dd {% if not request.user.is_staff or not request.user.is_superuser %}hidden{% endif %}>
                                     <input  type="number" class="form-control form-control-lg rounded-0 text-end" step="any" min="0" max="100" name="tax" value="{% if not request.user.is_staff or not request.user.is_superuser %}12{% else %}0{% endif %}">
                                 </dd>
                                 <dt class="h4 fw-bold text-light">Tax Amount</dt>
